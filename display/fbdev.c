@@ -88,10 +88,10 @@ static int fbfd = 0;
  *   GLOBAL FUNCTIONS
  **********************/
 
-void fbdev_init(void)
+void fbdev_init(char *fbdev_path)
 {
     // Open the file for reading and writing
-    fbfd = open(FBDEV_PATH, O_RDWR);
+    fbfd = open(fbdev_path, O_RDWR);
     if(fbfd == -1) {
         perror("Error: cannot open framebuffer device");
         return;
@@ -99,10 +99,10 @@ void fbdev_init(void)
     LV_LOG_INFO("The framebuffer device was opened successfully");
 
     // Make sure that the display is on.
-    if (ioctl(fbfd, FBIOBLANK, FB_BLANK_UNBLANK) != 0) {
+    /*if (ioctl(fbfd, FBIOBLANK, FB_BLANK_UNBLANK) != 0) {
         perror("ioctl(FBIOBLANK)");
         return;
-    }
+    }*/
 
 #if USE_BSD_FBDEV
     struct fbtype fb;
@@ -130,12 +130,14 @@ void fbdev_init(void)
 #else /* USE_BSD_FBDEV */
 
     // Get fixed screen information
+	perror("get fixed screen info\n");
     if(ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo) == -1) {
         perror("Error reading fixed information");
         return;
     }
 
     // Get variable screen information
+	perror("get variable screen info\n");
     if(ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo) == -1) {
         perror("Error reading variable information");
         return;

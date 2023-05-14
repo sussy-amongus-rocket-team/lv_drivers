@@ -56,9 +56,9 @@ int evdev_key_val;
 /**
  * Initialize the evdev interface
  */
-void evdev_init(void)
+void evdev_init(char* evdev_path)
 {
-    if (!evdev_set_file(EVDEV_NAME)) {
+    if (!evdev_set_file(evdev_path)) {
         return;
     }
 
