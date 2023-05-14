@@ -117,11 +117,6 @@ static uint32_t get_conn_property_id(const char *name)
 static void page_flip_handler(int fd, unsigned int sequence, unsigned int tv_sec,
 			      unsigned int tv_usec, void *user_data)
 {
-	LV_UNUSED(fd);
-	LV_UNUSED(sequence);
-	LV_UNUSED(tv_sec);
-	LV_UNUSED(tv_usec);
-	LV_UNUSED(user_data);
 	dbg("flip");
 }
 
@@ -288,7 +283,6 @@ static int drm_dmabuf_set_plane(struct drm_buffer *buf)
 
 static int find_plane(unsigned int fourcc, uint32_t *plane_id, uint32_t crtc_id, uint32_t crtc_idx)
 {
-	LV_UNUSED(crtc_id);
 	drmModePlaneResPtr planes;
 	drmModePlanePtr plane;
 	unsigned int i;
@@ -470,7 +464,7 @@ static int drm_find_connector(void)
 		drmModeFreeEncoder(enc);
 	}
 
-	drm_dev.crtc_idx = UINT32_MAX;
+	drm_dev.crtc_idx = -1;
 
 	for (i = 0; i < res->count_crtcs; ++i) {
 		if (drm_dev.crtc_id == res->crtcs[i]) {
@@ -479,7 +473,7 @@ static int drm_find_connector(void)
 		}
 	}
 
-	if (drm_dev.crtc_idx == UINT32_MAX) {
+	if (drm_dev.crtc_idx == -1) {
 		err("drm: CRTC not found");
 		goto free_res;
 	}
@@ -693,8 +687,6 @@ static int drm_setup_buffers(void)
 
 void drm_wait_vsync(lv_disp_drv_t *disp_drv)
 {
-	LV_UNUSED(disp_drv);
-
 	int ret;
 	fd_set fds;
 	FD_ZERO(&fds);
@@ -721,8 +713,8 @@ void drm_wait_vsync(lv_disp_drv_t *disp_drv)
 void drm_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p)
 {
 	struct drm_buffer *fbuf = drm_dev.cur_bufs[1];
-	uint32_t w = (area->x2 - area->x1 + 1);
-	uint32_t h = (area->y2 - area->y1 + 1);
+	lv_coord_t w = (area->x2 - area->x1 + 1);
+	lv_coord_t h = (area->y2 - area->y1 + 1);
 	int i, y;
 
 	dbg("x %d:%d y %d:%d w %d h %d", area->x1, area->x2, area->y1, area->y2, w, h);

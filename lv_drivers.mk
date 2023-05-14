@@ -1,5 +1,10 @@
-LV_DRIVERS_PATH ?= ${shell pwd}/lv_drivers
+LV_DRIVERS_DIR_NAME ?= lv_drivers
 
-CSRCS += $(shell find $(LV_DRIVERS_PATH) -type f -name '*.c')
-CFLAGS += "-I$(LV_DRIVERS_PATH)"
+override CFLAGS := -I$(LVGL_DIR) $(CFLAGS)
 
+CSRCS += $(wildcard $(LVGL_DIR)/$(LV_DRIVERS_DIR_NAME)/*.c)
+CSRCS += $(wildcard $(LVGL_DIR)/$(LV_DRIVERS_DIR_NAME)/wayland/*.c)
+CSRCS += $(wildcard $(LVGL_DIR)/$(LV_DRIVERS_DIR_NAME)/indev/*.c)
+CSRCS += $(wildcard $(LVGL_DIR)/$(LV_DRIVERS_DIR_NAME)/gtkdrv/*.c)
+CSRCS += $(wildcard $(LVGL_DIR)/$(LV_DRIVERS_DIR_NAME)/display/*.c)
+CSRCS += $(wildcard $(LVGL_DIR)/$(LV_DRIVERS_DIR_NAME)/sdl/*.c)

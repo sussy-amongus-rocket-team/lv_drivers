@@ -9,8 +9,8 @@
 #include "sdl.h"
 #if USE_MONITOR || USE_SDL
 
-#if LV_USE_DRAW_SDL 
-# error "LV_USE_DRAW_SDL must not be enabled"
+#if LV_USE_GPU_SDL
+# error "LV_USE_GPU_SDL must not be enabled"
 #endif
 
 #if USE_MONITOR
@@ -47,7 +47,6 @@
 # define SDL_FULLSCREEN        0
 #endif
 
-#include "sdl_common_internal.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
@@ -96,6 +95,17 @@ monitor_t monitor;
 #if SDL_DUAL_DISPLAY
 monitor_t monitor2;
 #endif
+
+static volatile bool sdl_inited = false;
+
+static bool left_button_down = false;
+static int16_t last_x = 0;
+static int16_t last_y = 0;
+
+static int16_t wheel_diff = 0;
+static lv_indev_state_t wheel_state = LV_INDEV_STATE_RELEASED;
+
+static char buf[KEYBOARD_BUFFER_SIZE];
 
 /**********************
  *      MACROS
