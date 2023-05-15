@@ -130,14 +130,12 @@ void fbdev_init(char *fbdev_path)
 #else /* USE_BSD_FBDEV */
 
     // Get fixed screen information
-	perror("get fixed screen info\n");
     if(ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo) == -1) {
         perror("Error reading fixed information");
         return;
     }
 
     // Get variable screen information
-	perror("get variable screen info\n");
     if(ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo) == -1) {
         perror("Error reading variable information");
         return;
